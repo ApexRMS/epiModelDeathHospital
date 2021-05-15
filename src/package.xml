@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package
+  name="epiModelDeathHospital"
+  displayName="Death + Hospitalization Model"
+  isAddOn="True"
+  extendsPackage="epi"
+  version="1.0.0">
+  <transformers>
+    <transformer
+      name="modelDeaths"
+      isPrimary="True"
+      displayName="Death + Hospitalization Model: Deaths"
+      className="SyncroSim.StochasticTime.StochasticTimeTransformer"
+      classAssembly="SyncroSim.StochasticTime"
+      configurationSheet="RunSettingsDeaths"
+      programName="Rscript"
+      programArguments="modelDeaths.R"
+      runContext="LocalOnly"
+      isRunnable ="True">
+      <datafeeds>
+        <datafeed name="RunSettingsDeaths" displayName="Run Settings - Deaths" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="RunSettingsDeaths" displayName="Run Settings" isSingleRow="True">
+              <columns>
+                <column name="RunSettingsDeathsID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" displayName="Scenario" dataType="Integer"/>
+                <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="CaseFatalityRate" displayName="Case fatality rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="CaseFatalityRateSD" displayName="Case fatality rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="DeathDelay" dataType="Integer" displayName="Death delay" defaultValue="17" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+              </columns>
+              <defaultRecords>
+                <record columns="MaximumIteration|CaseFatalityRate|CaseFatalityRateSD" values="20|0.0102|0.0035"/>
+              </defaultRecords>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+      </datafeeds>
+      <pipeline>
+        <datafeed name="RunSettingsDeaths"/>
+        <datafeed name="epi_DataSummary"/>
+      </pipeline>
+      <include>
+        <transformer name="modelInHospital"/>
+        <transformer name="modelInIcu"/>
+      </include>
+    </transformer>
+    <transformer
+      name="modelInHospital"
+      displayName="Death + Hospitalization Model: In Hospital"
+      className="SyncroSim.StochasticTime.StochasticTimeTransformer"
+      classAssembly="SyncroSim.StochasticTime"
+      configurationSheet="RunSettings"
+      programName="Rscript"
+      programArguments="modelInHospital.R"
+      runContext="LocalOnly"
+      isRunnable ="True">
+      <datafeeds>
+        <datafeed name="RunSettingsInHospital" displayName="Run Settings - In Hospital" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="RunSettingsInHospital" displayName="Run Settings" isSingleRow="True">
+              <columns>
+                <column name="RunSettingsInHospitalID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" displayName="Scenario" dataType="Integer"/>
+                <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+                <column name="HospitalizationDuration" dataType="Integer" displayName="Non-urgent duration" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+              </columns>
+              <defaultRecords>
+                <record columns="MaximumIteration|HospitalizationRate|HospitalizationRateSD" values="20|0.035|0.005"/>
+              </defaultRecords>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+      </datafeeds>
+      <pipeline>
+        <datafeed name="RunSettingsInHospital"/>
+        <datafeed name="epi_DataSummary"/>
+      </pipeline>
+    </transformer>
+    <transformer
+      name="modelInIcu"
+      displayName="Death + Hospitalization Model: In ICU"
+      className="SyncroSim.StochasticTime.StochasticTimeTransformer"
+      classAssembly="SyncroSim.StochasticTime"
+      configurationSheet="RunSettings"
+      programName="Rscript"
+      programArguments="modelInIcu.R"
+      runContext="LocalOnly"
+      isRunnable ="True">
+      <datafeeds>
+        <datafeed name="RunSettingsInIcu" displayName="Run Settings - In ICU" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="RunSettingsInIcu" displayName="Run Settings" isSingleRow="True">
+              <columns>
+                <column name="RunSettingsInIcuID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" displayName="Scenario" dataType="Integer"/>
+                <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
+                <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="ProportionICU" displayName="Proportion ICU" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="ProportionICUSD" displayName="Proportion ICU sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+                <column name="ICUDuration" dataType="Integer" displayName="ICU duration" defaultValue="12" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+              </columns>
+              <defaultRecords>
+                <record columns="MaximumIteration|HospitalizationRate|HospitalizationRateSD|ProportionICU|ProportionICUSD" values="20|0.035|0.005|0.229|0.01"/>
+              </defaultRecords>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+      </datafeeds>
+      <pipeline>
+        <datafeed name="RunSettingsInIcu"/>
+        <datafeed name="epi_DataSummary"/>
+      </pipeline>
+    </transformer>
+  </transformers>
+  <layouts>
+    <layout name="coreforms_ScenarioDatafeeds">
+      <group name="DeathHospitalizationModel" displayName="Death Hospitalization Model" appendTo="epi_Models">
+        <group name="ModelInputs" displayName="Inputs">
+          <group name="Deaths">
+            <item name="RunSettingsDeaths" itemTransformer="modelDeaths" showIf="isEither"/>
+            <item
+            name="epi_DataSummary"
+            displayName="Input Data"
+            showIf="isEither"
+            viewClassName="SyncroSim.Core.Forms.MultiRowDataFeedView"
+            viewClassAssembly="SyncroSim.Core.Forms"
+            filterTransformer="!modelDeaths"
+            itemTransformer="modelDeaths" />
+          </group>
+          <group name="InHospital" displayName="In Hospital">
+            <item name="RunSettingsInHospital" itemTransformer="modelInHospital" showIf="isEither"/>
+            <item
+            name="epi_DataSummary"
+            displayName="Input Data"
+            showIf="isEither"
+            viewClassName="SyncroSim.Core.Forms.MultiRowDataFeedView"
+            viewClassAssembly="SyncroSim.Core.Forms"
+            filterTransformer="!modelInHospital"
+            itemTransformer="modelInHospital" />
+          </group>
+          <group name="InIcu" displayName="In ICU">
+            <item name="RunSettingsInIcu" itemTransformer="modelInIcu" showIf="isEither"/>
+            <item
+            name="epi_DataSummary"
+            displayName="Input Data"
+            showIf="isEither"
+            viewClassName="SyncroSim.Core.Forms.MultiRowDataFeedView"
+            viewClassAssembly="SyncroSim.Core.Forms"
+            filterTransformer="!modelInIcu"
+            itemTransformer="modelInIcu" />
+          </group>
+        </group>
+        <group name="ModelOutputs" displayName="Outputs">
+          <item
+            name="epi_DataSummary"
+            displayName="Results"
+            showIf="isResult"
+            viewClassName="SyncroSim.Core.Forms.MultiRowDataFeedView"
+            viewClassAssembly="SyncroSim.Core.Forms"
+            filterTransformer="Model"
+            itemTransformer="Model"/>
+        </group>
+      </group>
+    </layout>
+  </layouts>
+</package>
