@@ -15,45 +15,14 @@ pipeline <- datasheet(myScenario, "core_Pipeline", lookupsAsFactors = F)
 inputData <- datasheet(myScenario, name = "epi_DataSummary", lookupsAsFactors = F)
 runSettings <- datasheet(myScenario, "epiModelDeathHospital_RunSettingsDeaths", lookupsAsFactors = F, optional = T)
 
-## Decide which source transformer to use ----
-
-# Find the position of the current transformer in the pipeline
-currentRunOrder <- pipeline %>%
-  filter(StageNameID == transformerName) %>%
-  pull(RunOrder)
-
-if(currentRunOrder > 1){
-  sourceTransformer <- pipeline %>%
-    filter(RunOrder == currentRunOrder - 1) %>%
-    pull(StageNameID)
-} else{
-  sourceTransformer <- inputData %>%
-    filter(Variable == "Deaths - Cumulative") %>%
-    pull(TransformerID) %>%
-    tail(1)
-}
-
-if(length(sourceTransformer) ==0){
-  #determine the transformer with the latest case data
-  lastCaseTimestep <- inputData %>%
-    filter(Variable == "Cases - Daily") %>%
-    pull(Timestep) %>%
-    sort %>%
-    tail(1)
-  sourceTransformer <- inputData %>%
-    filter(Timestep == lastCaseTimestep) %>%
-    pull(TransformerID) %>%
-    sort %>%
-    tail(1)
-}
-
 ## Parse settings ----
 jurisdictions <- inputData %>%
-  filter(Variable == "Deaths - Cumulative") %>%
+  filter(TransformerID == runSettings$CaseSourceTransformerID) %>%
   pull(Jurisdiction) %>%
   unique
 
 # Use last day of death data as first day of projection
+# TODO: handle no death data
 if(is.na(runSettings$MinimumTimestep)){
   runSettings$MinimumTimestep <- inputData %>%
     filter(Variable == "Deaths - Cumulative") %>%
@@ -80,13 +49,13 @@ for (j in 1:length(jurisdictions)) {
   #j = 1
   # Get the needed case data
   jurisdictionCases <- inputData %>%
-    filter(Jurisdiction == jurisdictions[j], Variable == "Cases - Daily", TransformerID == sourceTransformer)
+    filter(Jurisdiction == jurisdictions[j], Variable == "Cases - Daily", TransformerID == runSettings$CaseSourceTransformerID)
   
   # Get the needed death data
   jurisdictionCumulativeDeaths <- inputData %>%
-    filter(Jurisdiction == jurisdictions[j], Variable == "Deaths - Cumulative")
+    filter(Jurisdiction == jurisdictions[j], Variable == "Deaths - Cumulative", TransformerID == runSettings$DeathSourceTransformerID)
   jurisdictionDailyDeaths <- inputData %>%
-    filter(Jurisdiction == jurisdictions[j], Variable == "Deaths - Daily")
+    filter(Jurisdiction == jurisdictions[j], Variable == "Deaths - Daily", TransformerID == runSettings$DeathSourceTransformerID)
   
   for (i in runSettings$MinimumIteration:runSettings$MaximumIteration){
     #i = 1
@@ -140,7 +109,7 @@ for (j in 1:length(jurisdictions)) {
                Iteration == i) %>% 
         pull(Value) %>% sort %>%
         tail(1)
-      deathNumber <- caseNumber * fatalityRate
+      deathNumber <- rbinom(1,round(caseNumber, digits = 0),fatalityRate)
       cumulativeDeaths <- cumulativeDeaths + deathNumber
       myOutput <- addRow(myOutput, list(transformerName[1], 
                                         i, as.character(as_date(timestep)), 
