@@ -15,7 +15,6 @@
       configurationSheet="RunSettingsDeaths"
       programName="Rscript"
       programArguments="modelDeaths.R"
-      runContext="LocalOnly"
       isRunnable ="True">
       <datafeeds>
         <datafeed name="RunSettingsDeaths" displayName="Run Settings" dataScope="Scenario">
@@ -27,16 +26,13 @@
                 <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="CaseFatalityRate" displayName="Case fatality rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="CaseFatalityRateSD" displayName="Case fatality rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="40" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="CaseFatalityRate" displayName="Case fatality rate" dataType="Double" defaultValue="0.003"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="CaseFatalityRateSD" displayName="Case fatality rate sd" dataType="Double" defaultValue="0.001"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
                 <column name="DeathDelay" dataType="Integer" displayName="Death delay (days)" defaultValue="17" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
-                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Source: Cases" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
-                <column name="DeathSourceTransformerID" dataType="Integer" displayName="Source: Deaths" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="DeathSourceTransformerID" dataType="Integer" displayName="Death data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
-              <defaultRecords>
-                <record columns="MaximumIteration|CaseFatalityRate|CaseFatalityRateSD" values="20|0.003|0.001"/>
-              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>
@@ -55,10 +51,9 @@
       displayName="Death + Hospitalization Model: In Hospital"
       className="SyncroSim.StochasticTime.StochasticTimeTransformer"
       classAssembly="SyncroSim.StochasticTime"
-      configurationSheet="RunSettings"
+      configurationSheet="RunSettingsInHospital"
       programName="Rscript"
       programArguments="modelInHospital.R"
-      runContext="LocalOnly"
       isRunnable ="True">
       <datafeeds>
         <datafeed name="RunSettingsInHospital" displayName="Run Settings" dataScope="Scenario">
@@ -70,17 +65,14 @@
                 <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay (days)" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="40" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double" defaultValue="0.035"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double" defaultValue="0.005"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay (days)" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
                 <column name="HospitalizationDuration" dataType="Integer" displayName="Hospitalization duration (days)" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
-                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Source: Cases" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
-                <column name="InHospitalSourceTransformerID" dataType="Integer" displayName="Source: In Hospital" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Cases data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="InHospitalSourceTransformerID" dataType="Integer" displayName="Hospital data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
-              <defaultRecords>
-                <record columns="MaximumIteration|HospitalizationRate|HospitalizationRateSD" values="20|0.035|0.005"/>
-              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>
@@ -95,10 +87,9 @@
       displayName="Death + Hospitalization Model: In ICU"
       className="SyncroSim.StochasticTime.StochasticTimeTransformer"
       classAssembly="SyncroSim.StochasticTime"
-      configurationSheet="RunSettings"
+      configurationSheet="RunSettingsInIcu"
       programName="Rscript"
       programArguments="modelInIcu.R"
-      runContext="LocalOnly"
       isRunnable ="True">
       <datafeeds>
         <datafeed name="RunSettingsInIcu" displayName="Run Settings" dataScope="Scenario">
@@ -110,19 +101,16 @@
                 <column name="MinimumTimestep" displayName="Projection start date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MaximumTimestep" displayName="Projection end date (yyyy-mm-dd)" dataType="Date" validationType="Date"/>
                 <column name="MinimumIteration" dataType="Integer" isVisible="False" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
-                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="ProportionICU" displayName="Proportion ICU" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="ProportionICUSD" displayName="Proportion ICU sd" dataType="Double"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
-                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay (days)" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+                <column name="MaximumIteration" dataType="Integer" displayName="Iterations" defaultValue="40" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="HospitalizationRate" displayName="Hospitalization rate" dataType="Double" defaultValue="0.035"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double" defaultValue="0.005"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="ProportionICU" displayName="Proportion ICU" dataType="Double" defaultValue="0.229"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="ProportionICUSD" displayName="Proportion ICU sd" dataType="Double" defaultValue="0.01"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
+                <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay (days)" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
                 <column name="ICUDuration" dataType="Integer" displayName="ICU duration (days)" defaultValue="12" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
-                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Source: Cases" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
-                <column name="InICUSourceTransformerID" dataType="Integer" displayName="Source: In ICU" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="InICUSourceTransformerID" dataType="Integer" displayName="ICU data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
-              <defaultRecords>
-                <record columns="MaximumIteration|HospitalizationRate|HospitalizationRateSD|ProportionICU|ProportionICUSD" values="20|0.035|0.005|0.229|0.01"/>
-              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>

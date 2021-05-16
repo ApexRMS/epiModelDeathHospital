@@ -25,7 +25,8 @@ jurisdictions <- inputData %>%
 # TODO: handle no death data
 if(is.na(runSettings$MinimumTimestep)){
   runSettings$MinimumTimestep <- inputData %>%
-    filter(Variable == "Deaths - Cumulative") %>%
+    filter(Variable == "Deaths - Cumulative",
+           TransformerID == runSettings$DeathSourceTransformerID) %>%
     pull(Timestep) %>%
     sort %>%
     tail(1)  
