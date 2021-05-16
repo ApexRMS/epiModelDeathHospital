@@ -44,6 +44,11 @@ myOutput <- datasheet(myScenario, "epi_DataSummary",
                       lookupsAsFactors = F)
 myOutput$Timestep = as.character(myOutput$Timestep)
 
+envBeginSimulation(length(jurisdictions) * 
+                     (runSettings$MaximumIteration - runSettings$MinimumIteration +1) * 
+                     (as.integer(as.Date(runSettings$MaximumTimestep)) - 
+                        as.integer(as.Date(runSettings$MinimumTimestep)) +1))
+
 for (j in 1:length(jurisdictions)) {
 
   #j = 1
@@ -112,10 +117,12 @@ for (j in 1:length(jurisdictions)) {
                                         i, as.character(as_date(timestep)), 
                                         "In Hospital - Daily", jurisdictions[j],
                                         NA, NA, NA, inHospital))
+      envStepSimulation()
     }
   }
 }
 
+envEndSimulation()
 
 # Save run settings back to SyncroSim
 saveDatasheet(myScenario, runSettings, "epiModelDeathHospital_RunSettingsInHospital")

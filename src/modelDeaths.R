@@ -45,6 +45,11 @@ myOutput <- datasheet(myScenario, "epi_DataSummary",
                       lookupsAsFactors = F)
 myOutput$Timestep = as.character(myOutput$Timestep)
 
+envBeginSimulation(length(jurisdictions) * 
+                     (runSettings$MaximumIteration - runSettings$MinimumIteration +1) * 
+                     (as.integer(as.Date(runSettings$MaximumTimestep)) - 
+                        as.integer(as.Date(runSettings$MinimumTimestep)) +1))
+
 for (j in 1:length(jurisdictions)) {
 
   #j = 1
@@ -103,6 +108,7 @@ for (j in 1:length(jurisdictions)) {
                                         "Deaths - Daily", jurisdictions[j],
                                         NA, NA, NA, startDailyDeaths))
     cumulativeDeaths <- startCumulativeDeaths
+    
     for(timestep in (as.integer(as.Date(runSettings$MinimumTimestep))+1):as.integer(as.Date(runSettings$MaximumTimestep))){
       #timestep <- (as.integer(as.Date(runSettings$MinimumTimestep))+1)
       caseNumber <- jurisdictionCases %>% 
@@ -120,9 +126,12 @@ for (j in 1:length(jurisdictions)) {
                                         i, as.character(as_date(timestep)), 
                                                         "Deaths - Cumulative", jurisdictions[j],
                                                         NA, NA, NA, cumulativeDeaths))
+      envStepSimulation()
     }
   }
 }
+
+envEndSimulation()
 
 
 # Save run settings back to SyncroSim
