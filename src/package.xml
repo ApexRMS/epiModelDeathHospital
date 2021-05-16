@@ -70,7 +70,7 @@
                 <column name="HospitalizationRateSD" displayName="Hospitalization rate sd" dataType="Double" defaultValue="0.005"/> validationType="Decimal" validationCondition="LessEqual" formula1="1" />
                 <column name="HospitalizationDelay" dataType="Integer" displayName="Hospitalization delay (days)" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
                 <column name="HospitalizationDuration" dataType="Integer" displayName="Hospitalization duration (days)" defaultValue="15" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
-                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Cases data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
+                <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
                 <column name="InHospitalSourceTransformerID" dataType="Integer" displayName="Hospital data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
             </datasheet>
