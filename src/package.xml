@@ -28,6 +28,9 @@
                 <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
                 <column name="DeathSourceTransformerID" dataType="Integer" displayName="Death data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
+              <defaultRecords>
+                <record columns="CaseFatalityRate|CaseFatalityRateSD|DeathDelay" values="0.003|0.001|17"/>
+              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>
@@ -68,6 +71,9 @@
                 <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
                 <column name="InHospitalSourceTransformerID" dataType="Integer" displayName="Hospital data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
+              <defaultRecords>
+                <record columns="HospitalizationRate|HospitalizationRateSD|HospitalizationDelay|HospitalizationDuration" values="0.035|0.005|15|15"/>
+              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>
@@ -106,6 +112,9 @@
                 <column name="CaseSourceTransformerID" dataType="Integer" displayName="Case data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
                 <column name="InICUSourceTransformerID" dataType="Integer" displayName="ICU data source" validationType="Datasheet" formula1="core_Transformer" allowDbNull="False"/>
               </columns>
+              <defaultRecords>
+                <record columns="HospitalizationRate|HospitalizationRateSD|ProportionICU|ProportionICUSD|HospitalizationDelay|ICUDuration" values="0.035|0.005|0.229|0.01|15|12"/>
+              </defaultRecords>
             </datasheet>
           </datasheets>
         </datafeed>
